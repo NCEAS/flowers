@@ -19,6 +19,7 @@ plot_flower <- function(.Data,
                         title           = NA,
                         legend_include  = TRUE,
                         colors          = NA,
+                        fixed_colors    = TRUE,
                         filename        = NA) {
 
     # Sanity checking on our data frame
@@ -39,7 +40,7 @@ plot_flower <- function(.Data,
     dark_fill  <- 'grey22'
 
     ## Default color palette ----
-    if (is.na(colors)) {
+    if (missing(colors)) {
         reds <-  grDevices::colorRampPalette(
             c("#A50026", "#D73027", "#F46D43", "#FDAE61", "#FEE090"), space="Lab")(65)
         blues <-  grDevices::colorRampPalette(
