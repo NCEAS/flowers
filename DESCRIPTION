@@ -1,5 +1,5 @@
-Package: flowerplot
-Title: Flower Plot
+Package: flowers
+Title: Flower Plots
 Version: 0.0.0.9001
 Authors@R: 
     c(
@@ -13,7 +13,7 @@ Authors@R:
            email = "jones@nceas.ucsb.edu",
            comment = c(ORCID = "https://orcid.org/0000-0003-0077-4738"))
     )
-Description: Generates flower plot graphics.
+Description: Flowers provides functions to generate flower plot graphics.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
