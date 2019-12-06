@@ -4,14 +4,11 @@
 \alias{plot_flower}
 \title{Flower plot}
 \usage{
-plot_flower(.Data, p_limits = c(0, 100), title = NA,
-  legend_include = TRUE, filename = NA)
+plot_flower(.Data, title = NA, legend_include = TRUE, filename = NA)
 }
 \arguments{
 \item{.Data}{data frame containing scores to be plotted. Column names should be
 "pos", "score", "weight", "goal", "name_supra", "pos_supra"}
-
-\item{p_limits}{scale limits for the plot, defaults to c(0,100)}
 
 \item{title}{optional title for the plot}
 
