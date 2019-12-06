@@ -2,7 +2,6 @@
 #'
 #' @param .Data data frame containing scores to be plotted. Column names should be
 #' "pos", "score", "weight", "goal", "name_supra", "pos_supra"
-#' @param p_limits scale limits for the plot, defaults to c(0,100)
 #' @param title optional title for the plot
 #' @param legend_include logical, whether to include a plot legend, defaults to TRUE
 #' @param filename if not NA, save the figure using this filename (relative or absolute)
@@ -16,7 +15,6 @@
 #' @examples
 #'
 plot_flower <- function(.Data,
-                        p_limits        = c(0, 100),
                         title           = NA,
                         legend_include  = TRUE,
                         filename        = NA) {
@@ -54,6 +52,8 @@ plot_flower <- function(.Data,
         ## set up for displaying NAs
         dplyr::mutate(plot_NA = ifelse(is.na(score), 100, NA))
 
+    p_limits <- c(0, .Data$pos_end[1])
+
     ## create supra goal dataframe for position and labeling ----
     supra <- .Data %>%
         dplyr::mutate(name_supra = ifelse(is.na(name_supra), name_flower, name_supra)) %>%
@@ -66,6 +66,10 @@ plot_flower <- function(.Data,
     supra_df <- supra %>%
         dplyr::mutate(myAng = seq(-70, 250, length.out = dim(supra)[1])) %>%
         dplyr::filter(!is.na(pos_supra))
+
+    # Get list of goal labels
+    goal_labels <- .Data %>%
+        dplyr::select(goal, name_flower)
 
     ## set up basic plot parameters ----
     plot_obj <- ggplot2::ggplot(data = .Data,
@@ -102,8 +106,7 @@ plot_flower <- function(.Data,
                                       limits = c(0, 100)) +
         ## use weights to assign widths to petals:
         ggplot2::scale_x_continuous(labels = .Data$goal, breaks = .Data$pos, limits = p_limits) +
-        ggplot2::scale_y_continuous(limits = c(-blank_circle_rad, 100))
-
+        ggplot2::scale_y_continuous(limits = c(-blank_circle_rad, ifelse(first(goal_labels == TRUE) | is.data.frame(goal_labels), 150, 100)))
 
     ## If not provided, use the mean score
     mean_score <- round(mean(.Data$score, na.rm = TRUE))
