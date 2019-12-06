@@ -4,7 +4,8 @@
 \alias{plot_flower}
 \title{Flower plot}
 \usage{
-plot_flower(.Data, title = NA, legend_include = TRUE, filename = NA)
+plot_flower(.Data, title = NA, legend_include = TRUE, colors = NA,
+  filename = NA)
 }
 \arguments{
 \item{.Data}{data frame containing scores to be plotted. Column names should include
@@ -13,6 +14,8 @@ plot_flower(.Data, title = NA, legend_include = TRUE, filename = NA)
 \item{title}{optional title for the plot}
 
 \item{legend_include}{logical, whether to include a plot legend, defaults to TRUE}
+
+\item{colors}{an optional color palette to be used for the petal colors}
 
 \item{filename}{if not NA, save the figure using this filename (relative or absolute)}
 }

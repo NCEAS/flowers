@@ -4,6 +4,7 @@
 #' "score", "weight", "name_supra", and "name_flower"
 #' @param title optional title for the plot
 #' @param legend_include logical, whether to include a plot legend, defaults to TRUE
+#' @param colors an optional color palette to be used for the petal colors
 #' @param filename if not NA, save the figure using this filename (relative or absolute)
 #'
 #' @return ggplot object of the flowerplot
@@ -17,6 +18,7 @@
 plot_flower <- function(.Data,
                         title           = NA,
                         legend_include  = TRUE,
+                        colors          = NA,
                         filename        = NA) {
 
     # Sanity checking on our data frame
@@ -37,12 +39,13 @@ plot_flower <- function(.Data,
     dark_fill  <- 'grey22'
 
     ## Default color palette ----
-    reds <-  grDevices::colorRampPalette(
-        c("#A50026", "#D73027", "#F46D43", "#FDAE61", "#FEE090"),
-        space="Lab")(65)
-    blues <-  grDevices::colorRampPalette(
-        c("#E0F3F8", "#ABD9E9", "#74ADD1", "#4575B4", "#313695"))(35)
-    myPalette <-   c(reds, blues)
+    if (is.na(colors)) {
+        reds <-  grDevices::colorRampPalette(
+            c("#A50026", "#D73027", "#F46D43", "#FDAE61", "#FEE090"), space="Lab")(65)
+        blues <-  grDevices::colorRampPalette(
+            c("#E0F3F8", "#ABD9E9", "#74ADD1", "#4575B4", "#313695"))(35)
+        colors <- c(reds, blues)
+    }
 
     ## set up positions for the bar centers:
     ## cumulative sum of weights (incl current) minus half the current weight
@@ -107,7 +110,7 @@ plot_flower <- function(.Data,
         ## turn linear bar chart into polar coordinates start at 90 degrees (pi*.5)
         ggplot2::coord_polar(start = pi * 0.5) +
         ## set petal colors to the red-yellow-blue color scale:
-        ggplot2::scale_fill_gradientn(colours=myPalette, na.value="black",
+        ggplot2::scale_fill_gradientn(colours=colors, na.value="black",
                                       limits = c(0, 100)) +
         ## use weights to assign widths to petals:
         ggplot2::scale_x_continuous(labels = .Data$goal, breaks = .Data$pos, limits = p_limits) +
