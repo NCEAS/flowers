@@ -39,7 +39,20 @@ plot_flower <- function(.Data,
         c("#E0F3F8", "#ABD9E9", "#74ADD1", "#4575B4", "#313695"))(35)
     myPalette <-   c(reds, blues)
 
-    name_flower <- "Foo"
+    ## set up positions for the bar centers:
+    ## cumulative sum of weights (incl current) minus half the current weight
+    .Data <- .Data %>%
+        dplyr::group_by(group_var) %>%
+        dplyr::mutate(pos   = sum(weight) - (cumsum(weight) - 0.5 * weight)) %>%
+        dplyr::mutate(pos_end = sum(weight)) %>%
+        dplyr::ungroup() %>%
+        dplyr::group_by(name_supra) %>%
+        ## calculate position of supra goals before any unequal weighting (ie for FP)
+        dplyr::mutate(pos_supra  = ifelse(!is.na(name_supra), mean(pos), NA)) %>%
+        dplyr::ungroup() %>%
+        dplyr::filter(weight != 0) %>%
+        ## set up for displaying NAs
+        dplyr::mutate(plot_NA = ifelse(is.na(score), 100, NA))
 
     ## create supra goal dataframe for position and labeling ----
     supra <- .Data %>%
@@ -92,11 +105,14 @@ plot_flower <- function(.Data,
         ggplot2::scale_y_continuous(limits = c(-blank_circle_rad, 100))
 
 
+    ## If not provided, use the mean score
+    mean_score <- round(mean(.Data$score, na.rm = TRUE))
+
     ## add center number
     plot_obj <- plot_obj +
         ggplot2::geom_text(data = .Data,
                            inherit.aes = FALSE,
-                           ggplot2::aes(label = mean(.Data$score)),
+                           ggplot2::aes(label = mean_score),
                            x = 0, y = -blank_circle_rad,
                            hjust = .5, vjust = .5,
                            size = 12,
@@ -126,16 +142,16 @@ plot_flower <- function(.Data,
     ## position supra arc and names. x is angle, y is distance from center
     supra_rad  <- 145  ## supra goal radius from center
 
-    # plot_obj <- plot_obj +
-    #     ## add supragoal arcs
-    #     ggplot2::geom_errorbar(data = supra_df, inherit.aes = FALSE,
-    #                            ggplot2::aes(x = pos_supra, ymin = supra_rad, ymax = supra_rad),
-    #                            size = 0.25, show.legend = NA) +
-    #     ggplot2::geom_text(data = supra_df, inherit.aes = FALSE,
-    #                        ggplot2::aes(label = name_supra, x = pos_supra, y = supra_rad, angle = myAng),
-    #                        hjust = .5, vjust = .5,
-    #                        size = 3,
-    #                        color = dark_line)
+    plot_obj <- plot_obj +
+        ## add supragoal arcs
+        ggplot2::geom_errorbar(data = supra_df, inherit.aes = FALSE,
+                               ggplot2::aes(x = pos_supra, ymin = supra_rad, ymax = supra_rad),
+                               size = 0.25, show.legend = NA) +
+        ggplot2::geom_text(data = supra_df, inherit.aes = FALSE,
+                           ggplot2::aes(label = name_supra, x = pos_supra, y = supra_rad, angle = myAng),
+                           hjust = .5, vjust = .5,
+                           size = 3,
+                           color = dark_line)
 
     # exclude legend if argument is legend=FALSE
     if(!legend_include){
