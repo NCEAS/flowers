@@ -1,7 +1,7 @@
 #' Flower plot
 #'
-#' @param .Data data frame containing scores to be plotted. Column names should be
-#' "pos", "score", "weight", "goal", "name_supra", "pos_supra"
+#' @param .Data data frame containing scores to be plotted. Column names should include
+#' "score", "weight", "name_supra", and "name_flower"
 #' @param title optional title for the plot
 #' @param legend_include logical, whether to include a plot legend, defaults to TRUE
 #' @param filename if not NA, save the figure using this filename (relative or absolute)
@@ -19,6 +19,14 @@ plot_flower <- function(.Data,
                         legend_include  = TRUE,
                         filename        = NA) {
 
+    # Sanity checking on our data frame
+    stopifnot(
+        all(c("score", "weight", "name_flower", "name_supra") %in% colnames(.Data)),
+        all(!is.na(.Data$name_flower)),
+        is.numeric(.Data$score),
+        is.numeric(.Data$weight)
+    )
+
     blank_circle_rad <- 42
     light_line <- 'grey90'
     white_fill <- 'white'
@@ -27,7 +35,6 @@ plot_flower <- function(.Data,
     med_fill   <- 'grey52'
     dark_line  <- 'grey20'
     dark_fill  <- 'grey22'
-
 
     ## Default color palette ----
     reds <-  grDevices::colorRampPalette(
@@ -143,16 +150,18 @@ plot_flower <- function(.Data,
     ## position supra arc and names. x is angle, y is distance from center
     supra_rad  <- 145  ## supra goal radius from center
 
-    plot_obj <- plot_obj +
-        ## add supragoal arcs
-        ggplot2::geom_errorbar(data = supra_df, inherit.aes = FALSE,
-                               ggplot2::aes(x = pos_supra, ymin = supra_rad, ymax = supra_rad),
-                               size = 0.25, show.legend = NA) +
-        ggplot2::geom_text(data = supra_df, inherit.aes = FALSE,
-                           ggplot2::aes(label = name_supra, x = pos_supra, y = supra_rad, angle = myAng),
-                           hjust = .5, vjust = .5,
-                           size = 3,
-                           color = dark_line)
+    if(nrow(supra_df) > 0) {
+        plot_obj <- plot_obj +
+            ## add supragoal arcs
+            ggplot2::geom_errorbar(data = supra_df, inherit.aes = FALSE,
+                                   ggplot2::aes(x = pos_supra, ymin = supra_rad, ymax = supra_rad),
+                                   size = 0.25, show.legend = NA) +
+            ggplot2::geom_text(data = supra_df, inherit.aes = FALSE,
+                               ggplot2::aes(label = name_supra, x = pos_supra, y = supra_rad, angle = myAng),
+                               hjust = .5, vjust = .5,
+                               size = 3,
+                               color = dark_line)
+    }
 
     # exclude legend if argument is legend=FALSE
     if(!legend_include){
@@ -161,7 +170,7 @@ plot_flower <- function(.Data,
     }
 
     ### display/save options: print to graphics, save to file
-    suppressWarnings(print(plot_obj))
+    print(plot_obj)
 
     ## save plot if a filename is provided
     if(!is.na(filename)) {

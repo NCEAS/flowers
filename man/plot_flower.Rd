@@ -7,8 +7,8 @@
 plot_flower(.Data, title = NA, legend_include = TRUE, filename = NA)
 }
 \arguments{
-\item{.Data}{data frame containing scores to be plotted. Column names should be
-"pos", "score", "weight", "goal", "name_supra", "pos_supra"}
+\item{.Data}{data frame containing scores to be plotted. Column names should include
+"score", "weight", "name_supra", and "name_flower"}
 
 \item{title}{optional title for the plot}
 
