@@ -24,6 +24,24 @@ from Jim Regetz at NCEAS, and then rewritten and extended by the OHI project.
 This package formalizes the approach into an easily re-usable function
 for generating custom flower plots for multiple scenarios.
 
+## Quick Start
+
+This is a basic example which shows you how to create a flower plot from an 
+appropriately structured data set:
+
+```{r example, fig.width=8, fig.height=8, out.width="70%"}
+library(flowers)
+data(ohi)
+plot_flower(ohi, "OHI Example Flower")
+```
+
+Currently `plot_flower()` expects particular column names and semantics, but
+this could be made more flexible.  See the structure of OHI for an example.
+
+```{r ohi_structure, echo=FALSE}
+str(ohi)
+```
+
 ## Installation
 
 You can install the development version of flowers from [GitHub](https://github.com/mbjones/flowers) with:
@@ -37,15 +55,3 @@ You can install the released version of flowers from [CRAN](https://CRAN.R-proje
 ``` r
 install.packages("flowers")
 ```
-
-## Example
-
-This is a basic example which shows you how to create a flower plot:
-
-```{r example, eval=FALSE}
-library(flowers)
-
-# coming soon....
-```
-
-

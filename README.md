@@ -18,6 +18,31 @@ OHI project. This package formalizes the approach into an easily
 re-usable function for generating custom flower plots for multiple
 scenarios.
 
+## Quick Start
+
+This is a basic example which shows you how to create a flower plot from
+an appropriately structured data set:
+
+``` r
+library(flowers)
+data(ohi)
+plot_flower(ohi, "OHI Example Flower")
+```
+
+<img src="man/figures/README-example-1.png" width="70%" />
+
+Currently `plot_flower()` expects particular column names and semantics,
+but this could be made more flexible. See the structure of OHI for an
+example.
+
+    #> 'data.frame':    13 obs. of  6 variables:
+    #>  $ goal       : chr  "FIS" "MAR" "AO" "NP" ...
+    #>  $ score      : num  50.5 NA 79.3 95.2 81.9 ...
+    #>  $ order      : num  1.1 1.2 2 3 5 6 7.1 7.2 8.1 8.2 ...
+    #>  $ weight     : num  0.5 0.5 1 1 1 1 0.5 0.5 0.5 0.5 ...
+    #>  $ name_supra : chr  "Food Provision" "Food Provision" NA NA ...
+    #>  $ name_flower: chr  "Fisheries" "Mariculture" "Artisanal Needs" "Marine Mammal Harvest" ...
+
 ## Installation
 
 You can install the development version of flowers from
@@ -32,14 +57,4 @@ You can install the released version of flowers from
 
 ``` r
 install.packages("flowers")
-```
-
-## Example
-
-This is a basic example which shows you how to create a flower plot:
-
-``` r
-library(flowers)
-
-# coming soon....
 ```
