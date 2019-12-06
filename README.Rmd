@@ -1,0 +1,41 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# flowers
+
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/flowers)](https://CRAN.R-project.org/package=flowers)
+<!-- badges: end -->
+
+The goal of flowers is to ...
+
+## Installation
+
+You can install the released version of flowers from [CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("flowers")
+```
+
+## Example
+
+This is a basic example which shows you how to create a flower plot:
+
+```{r example, eval=FALSE}
+library(flowers)
+## basic example code
+```
+
+
