@@ -1,0 +1,22 @@
+Package: flowerplot
+Title: Flower Plot
+Version: 0.0.0.9000
+Authors@R: 
+    c(
+    person(given = "Jim",
+           family = "Regetz",
+           role = c("aut"),
+           email = "regetz@nceas.ucsb.edu"),
+    person(given = "Matthew",
+           family = "Jones",
+           role = c("aut", "cre"),
+           email = "jones@nceas.ucsb.edu",
+           comment = c(ORCID = "https://orcid.org/0000-0003-0077-4738"))
+    )
+Description: Generates flower plot graphics.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Suggests:
+    testthat (>= 2.1.0)
+RoxygenNote: 6.1.1
