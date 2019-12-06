@@ -40,10 +40,8 @@ plot_flower <- function(.Data,
     ## set up positions for the bar centers:
     ## cumulative sum of weights (incl current) minus half the current weight
     .Data <- .Data %>%
-        dplyr::group_by(group_var) %>%
         dplyr::mutate(pos   = sum(weight) - (cumsum(weight) - 0.5 * weight)) %>%
         dplyr::mutate(pos_end = sum(weight)) %>%
-        dplyr::ungroup() %>%
         dplyr::group_by(name_supra) %>%
         ## calculate position of supra goals before any unequal weighting (ie for FP)
         dplyr::mutate(pos_supra  = ifelse(!is.na(name_supra), mean(pos), NA)) %>%

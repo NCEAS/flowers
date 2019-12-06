@@ -6,14 +6,20 @@ test_that("multiplication works", {
 # [8] "weight"          "name_supra"      "name_flower"     "pos"             "pos_end"         "pos_supra"       "plot_NA"
 
 test_that("flower plot displays", {
-    df <- data.frame(pos = 1:5,
-                        group_var = c(1,1,1,1,1),
-                        score = c(90, 80, 70, 60, 20),
-                        weight = c(1, 1, 1, 1, 0.5),
-                        goal = c("F", "A", "I", "R", "E"),
-                        name_flower = c("Findable", "Accessible", "Interoperable", "Reusable", "Extra"),
-                        name_supra = c(NA, NA, "Meta", "Meta", NA)
+    df <- data.frame(order = c(1, 4, 3, 2),
+                        score = c(90, 80, 70, 60),
+                        weight = c(1, 1, 1, 1),
+                        goal = c("F", "A", "I", "R"),
+                        name_flower = c("Findable", "Accessible", "Interoperable", "Reusable"),
+                        name_supra = c(NA, NA, "Meta", "Meta")
                         )
-    expect_equal(ncol(df), 7)
-    plot_flower(df, title = "Ha!")
+    expect_equal(ncol(df), 6)
+    plot_flower(df, title = "FAIR Metrics")
+    df_sorted <- df %>% arrange(name_flower)
+    plot_flower(df_sorted, title = "FAIR Metrics")
+    df_sorted2 <- df %>% arrange(order)
+    plot_flower(df_sorted2, title = "FAIR Metrics")
+
+    ohi2 <- read.csv("ohi.csv", stringsAsFactors = FALSE)
+    plot_flower(ohi2, "OHI Example")
 })
