@@ -1,5 +1,7 @@
 #' Flower plot
 #'
+#' @param .Data data frame containing scores to be plotted. Column names should be
+#' "pos", "score", "weight", "goal", "name_supra", "pos_supra"
 #' @param p_limits scale limits for the plot, defaults to c(0,100)
 #' @param title optional title for the plot
 #' @param legend_include logical, whether to include a plot legend, defaults to TRUE
@@ -8,6 +10,7 @@
 #' @return ggplot object of the flowerplot
 #'
 #' @import dplyr
+#' @import ggplot2
 #' @export
 #'
 #' @examples
