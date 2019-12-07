@@ -27,16 +27,23 @@ an appropriately structured data set:
 library(flowers)
 data(ohi)
 plot_flower(ohi, "OHI Example Flower")
-#> Warning: Removed 12 rows containing missing values (position_stack).
-#> Warning: Removed 1 rows containing missing values (position_stack).
-#> Warning: Removed 1 rows containing missing values (geom_errorbar).
 ```
 
 <img src="man/figures/README-example-1.png" width="70%" />
 
 Currently `plot_flower()` expects particular column names and semantics,
 but this could be made more flexible. See the structure of OHI for an
-example.
+example. In particular, it uses columns `score`, `weight`,
+`name_flower`, and `name_supra` to create the plot.
+
+By default the flower petals are colored proportionally to the `score`
+values as show in the OHI example above. One can provide a color palette
+(`colors`) to the `plot_flower()` function to control the gradient used.
+
+The `weight` variable controls the relative widths of the petals, and
+should range from 0 to 1. The petal labels are taken from the
+`name_flower` variable, and the grouping category labels are taken from
+the `name_supra` variable. Other columsn in the data frame are ignored.
 
     #> 'data.frame':    13 obs. of  6 variables:
     #>  $ goal       : chr  "FIS" "MAR" "AO" "NP" ...
@@ -46,26 +53,15 @@ example.
     #>  $ name_supra : chr  "Food Provision" "Food Provision" NA NA ...
     #>  $ name_flower: chr  "Fisheries" "Mariculture" "Artisanal Needs" "Marine Mammal Harvest" ...
 
-By default the flower petals are colored proportionally to the `score`
-values as show in the OHI example above. One can provide a color palette
-(`colors`) to control the gradient used.
-
-Alternatively, you can also color the petals with fixed colors
-determined by the `name_flower` categories, in which case you will
-likely want to provide a `colors` palette with at least as many colors
-as you have petals in the plot. Here’s an example with four fixed
-petals:
+Alternatively, by setting `fixed_colors = TRUE` you can also color the
+petals with discrete colors determined by the `name_flower` categories,
+in which case you will likely want to provide a `colors` palette with at
+least as many colors as you have petals in the plot. Here’s an example
+with four fixed petals, in which we also provide only missing values to
+`name_supra` so that no grouping labels are used:
 
 ``` r
     library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
     df <- data.frame(order = c(1, 4, 3, 2),
                         score = c(90, 80, 70, 60),
                         weight = c(1, 1, 1, 1),
@@ -77,7 +73,7 @@ petals:
     plot_flower(df, title = "FAIR Metrics", fixed_colors=TRUE, colors = d1_colors)
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+<img src="man/figures/README-fair_plot-1.png" width="70%" />
 
 ## Installation
 
