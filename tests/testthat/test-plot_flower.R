@@ -17,6 +17,8 @@ test_that("flower plot displays", {
                         stringsAsFactors = FALSE) %>% arrange(order)
     expect_equal(ncol(df), 6)
     plot_flower(df, title = "FAIR Metrics")
+    d1_colors <- c( "#c70a61", "#ff582d", "#1a6379", "#60c5e4")
+    plot_flower(df, title = "FAIR Metrics", fixed_colors=TRUE, colors = d1_colors)
 
     data(ohi)
     plot_flower(ohi, "OHI Example")

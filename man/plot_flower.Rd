@@ -5,7 +5,7 @@
 \title{Flower plot}
 \usage{
 plot_flower(.Data, title = NA, legend_include = TRUE, colors = NA,
-  filename = NA)
+  fixed_colors = FALSE, filename = NA)
 }
 \arguments{
 \item{.Data}{data frame containing scores to be plotted. Column names should include
@@ -17,6 +17,9 @@ plot_flower(.Data, title = NA, legend_include = TRUE, colors = NA,
 
 \item{colors}{an optional color palette to be used for the petal colors}
 
+\item{fixed_colors}{if TRUE, then use a discrete fixed color palette for coloring petals
+based on petal categories; defaults to FALSE,}
+
 \item{filename}{if not NA, save the figure using this filename (relative or absolute)}
 }
 \value{
@@ -26,5 +29,8 @@ ggplot object of the flowerplot
 Flower plot
 }
 \examples{
+
+data(ohi)
+plot_flower(ohi, "OHI Example")
 
 }

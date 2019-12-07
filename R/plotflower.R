@@ -5,6 +5,8 @@
 #' @param title optional title for the plot
 #' @param legend_include logical, whether to include a plot legend, defaults to TRUE
 #' @param colors an optional color palette to be used for the petal colors
+#' @param fixed_colors if TRUE, then use a discrete fixed color palette for coloring petals
+#' based on petal categories; defaults to FALSE,
 #' @param filename if not NA, save the figure using this filename (relative or absolute)
 #'
 #' @return ggplot object of the flowerplot
@@ -15,11 +17,14 @@
 #'
 #' @examples
 #'
+#' data(ohi)
+#' plot_flower(ohi, "OHI Example")
+#'
 plot_flower <- function(.Data,
                         title           = NA,
                         legend_include  = TRUE,
                         colors          = NA,
-                        fixed_colors    = TRUE,
+                        fixed_colors    = FALSE,
                         filename        = NA) {
 
     # Sanity checking on our data frame
@@ -81,8 +86,15 @@ plot_flower <- function(.Data,
         dplyr::select(goal, name_flower)
 
     ## set up basic plot parameters ----
+    ifelse(fixed_colors,
+        fill_var <- 'name_flower',
+        fill_var <- 'score'
+    )
     plot_obj <- ggplot2::ggplot(data = .Data,
-                                ggplot2::aes(x = pos, y = score, fill = score, width = weight))
+                                ggplot2::aes_(x = as.name('pos'),
+                                              y = as.name('score'),
+                                              fill = as.name(fill_var),
+                                              width = as.name('weight')))
 
     ## sets up the background/borders to the external boundary (100%) of plot
     plot_obj <- plot_obj +
@@ -110,12 +122,15 @@ plot_flower <- function(.Data,
                                size = 0.5, color = dark_line, show.legend = NA) +
         ## turn linear bar chart into polar coordinates start at 90 degrees (pi*.5)
         ggplot2::coord_polar(start = pi * 0.5) +
-        ## set petal colors to the red-yellow-blue color scale:
-        ggplot2::scale_fill_gradientn(colours=colors, na.value="black",
-                                      limits = c(0, 100)) +
         ## use weights to assign widths to petals:
         ggplot2::scale_x_continuous(labels = .Data$goal, breaks = .Data$pos, limits = p_limits) +
         ggplot2::scale_y_continuous(limits = c(-blank_circle_rad, ifelse(first(goal_labels == TRUE) | is.data.frame(goal_labels), 150, 100)))
+
+    ## set petal colors, use a discrete scale if fixed_colors=TRUE, otherwise continuous gradient
+    ifelse(fixed_colors,
+        plot_obj <- plot_obj + ggplot2::scale_fill_manual(values = colors),
+        plot_obj <- plot_obj + ggplot2::scale_fill_gradientn(colours=colors, na.value="black", limits = c(0, 100))
+    )
 
     ## If not provided, use the mean score
     mean_score <- round(mean(.Data$score, na.rm = TRUE))
@@ -168,7 +183,7 @@ plot_flower <- function(.Data,
     }
 
     # exclude legend if argument is legend=FALSE
-    if(!legend_include){
+    if(!legend_include | fixed_colors){
         plot_obj <- plot_obj +
             ggplot2::theme(legend.position="none")
     }
