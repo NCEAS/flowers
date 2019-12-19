@@ -1,12 +1,35 @@
 Package: flowers
 Title: Flower Plots
-Version: 0.0.0.9003
+Version: 0.0.0.9004
 Authors@R: 
     c(
     person(given = "Jim",
            family = "Regetz",
            role = c("aut"),
            email = "regetz@nceas.ucsb.edu"),
+    person(given = "Darren",
+           family = "Hardy",
+           role = c("aut"),
+           email = "hardy@nceas.ucsb.edu"),
+    person(given = "Ben",
+           family = "Best",
+           role = c("aut"),
+           email = "bbest@nceas.ucsb.edu",
+           comment = c(ORCID = "https://orcid.org/0000-0002-2686-0784")),
+    person(given = "Casey",
+           family = "O'Hara",
+           role = c("aut"),
+           email = "ohara@nceas.ucsb.edu",
+           comment = c(ORCID = "https://orcid.org/0000-0003-2968-7005")),
+    person(given = "Julia",
+           family = "Lowndes",
+           role = c("aut"),
+           email = "lowndes@nceas.ucsb.edu",
+           comment = c(ORCID = "https://orcid.org/0000-0003-1682-3872")),
+    person(given = "Melanie",
+           family = "Frazier",
+           role = c("aut"),
+           email = "frazier@nceas.ucsb.edu"),
     person(given = "Matthew",
            family = "Jones",
            role = c("aut", "cre"),
