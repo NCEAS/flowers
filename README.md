@@ -43,7 +43,7 @@ values as show in the OHI example above. One can provide a color palette
 The `weight` variable controls the relative widths of the petals, and
 should range from 0 to 1. The petal labels are taken from the
 `name_flower` variable, and the grouping category labels are taken from
-the `name_supra` variable. Other columsn in the data frame are ignored.
+the `name_supra` variable. Other columns in the data frame are ignored.
 
     #> 'data.frame':    13 obs. of  6 variables:
     #>  $ goal       : chr  "FIS" "MAR" "AO" "NP" ...
@@ -85,8 +85,11 @@ devtools::install_github("mbjones/flowers")
 ```
 
 You can install the released version of flowers from
-[CRAN](https://CRAN.R-project.org) with:
+[CRAN](https://CRAN.R-project.org)
+with:
 
 ``` r
 install.packages("flowers")
 ```
+
+[![nceas\_footer](https://www.nceas.ucsb.edu/files/newLogo_0.png)](http://www.nceas.ucsb.edu)
