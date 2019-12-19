@@ -9,8 +9,8 @@ test_that("flower plot displays", {
                         score = c(90, 80, 70, 60),
                         weight = c(1, 1, 1, 1),
                         goal = c("F", "A", "I", "R"),
-                        name_flower = c("Findable", "Accessible", "Interoperable", "Reusable"),
-                        name_supra = c(NA, NA, NA, NA),
+                        label = c("Findable", "Accessible", "Interoperable", "Reusable"),
+                        category = c(NA, NA, NA, NA),
                         stringsAsFactors = FALSE) %>% arrange(order)
     expect_equal(ncol(df), 6)
     plot_flower(df, title = "FAIR Metrics")

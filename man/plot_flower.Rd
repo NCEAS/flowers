@@ -9,7 +9,7 @@ plot_flower(.Data, title = NA, legend_include = TRUE, colors = NA,
 }
 \arguments{
 \item{.Data}{data frame containing scores to be plotted. Column names should include
-"score", "weight", "name_supra", and "name_flower"}
+"score", "weight", "category", and "label"}
 
 \item{title}{optional title for the plot}
 

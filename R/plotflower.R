@@ -1,7 +1,7 @@
 #' Flower plot
 #'
 #' @param .Data data frame containing scores to be plotted. Column names should include
-#' "score", "weight", "name_supra", and "name_flower"
+#' "score", "weight", "category", and "label"
 #' @param title optional title for the plot
 #' @param legend_include logical, whether to include a plot legend, defaults to TRUE
 #' @param colors an optional color palette to be used for the petal colors
@@ -29,8 +29,8 @@ plot_flower <- function(.Data,
 
     # Sanity checking on our data frame
     stopifnot(
-        all(c("score", "weight", "name_flower", "name_supra") %in% colnames(.Data)),
-        all(!is.na(.Data$name_flower)),
+        all(c("score", "weight", "label", "category") %in% colnames(.Data)),
+        all(!is.na(.Data$label)),
         is.numeric(.Data$score),
         is.numeric(.Data$weight)
     )
@@ -58,9 +58,9 @@ plot_flower <- function(.Data,
     .Data <- .Data %>%
         dplyr::mutate(pos   = sum(weight) - (cumsum(weight) - 0.5 * weight)) %>%
         dplyr::mutate(pos_end = sum(weight)) %>%
-        dplyr::group_by(name_supra) %>%
+        dplyr::group_by(category) %>%
         ## calculate position of supra goals before any unequal weighting (ie for FP)
-        dplyr::mutate(pos_supra  = ifelse(!is.na(name_supra), mean(pos), NA)) %>%
+        dplyr::mutate(pos_supra  = ifelse(!is.na(category), mean(pos), NA)) %>%
         dplyr::ungroup() %>%
         dplyr::filter(weight != 0) %>%
         ## set up for displaying NAs
@@ -70,9 +70,9 @@ plot_flower <- function(.Data,
 
     ## create supra goal dataframe for position and labeling ----
     supra <- .Data %>%
-        dplyr::mutate(name_supra = ifelse(is.na(name_supra), name_flower, name_supra)) %>%
-        dplyr::mutate(name_supra = paste0(name_supra, "\n")) %>%
-        dplyr::select(name_supra, pos_supra) %>%
+        dplyr::mutate(category = ifelse(is.na(category), label, category)) %>%
+        dplyr::mutate(category = paste0(category, "\n")) %>%
+        dplyr::select(category, pos_supra) %>%
         unique() %>%
         as.data.frame()
 
@@ -83,11 +83,11 @@ plot_flower <- function(.Data,
 
     # Get list of goal labels
     goal_labels <- .Data %>%
-        dplyr::select(goal, name_flower)
+        dplyr::select(goal, label)
 
     ## set up basic plot parameters ----
     ifelse(fixed_colors,
-        fill_var <- 'name_flower',
+        fill_var <- 'label',
         fill_var <- 'score'
     )
     plot_obj <- ggplot2::ggplot(data = .Data,
@@ -160,7 +160,7 @@ plot_flower <- function(.Data,
 
     ## add goal names
     plot_obj <- plot_obj +
-        ggplot2::geom_text(ggplot2::aes(label = name_flower, x = pos, y = 120),
+        ggplot2::geom_text(ggplot2::aes(label = label, x = pos, y = 120),
                            hjust = .5, vjust = .5,
                            size = 3,
                            color = dark_line)
@@ -176,7 +176,7 @@ plot_flower <- function(.Data,
                                    ggplot2::aes(x = pos_supra, ymin = supra_rad, ymax = supra_rad),
                                    size = 0.25, show.legend = NA) +
             ggplot2::geom_text(data = supra_df, inherit.aes = FALSE,
-                               ggplot2::aes(label = name_supra, x = pos_supra, y = supra_rad, angle = myAng),
+                               ggplot2::aes(label = category, x = pos_supra, y = supra_rad, angle = myAng),
                                hjust = .5, vjust = .5,
                                size = 3,
                                color = dark_line)
