@@ -30,7 +30,7 @@ Authors@R:
            family = "Frazier",
            role = c("aut"),
            email = "frazier@nceas.ucsb.edu"),
-    person(given = "Matthew",
+    person(given = "Matthew B.",
            family = "Jones",
            role = c("aut", "cre"),
            email = "jones@nceas.ucsb.edu",
