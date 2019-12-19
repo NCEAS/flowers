@@ -13,6 +13,7 @@
 #'
 #' @import dplyr
 #' @import ggplot2
+#' @importFrom rlang .data
 #' @export
 #'
 #' @examples
@@ -55,35 +56,39 @@ plot_flower <- function(.Data,
 
     ## set up positions for the bar centers:
     ## cumulative sum of weights (incl current) minus half the current weight
+    ## Note that using dplyr inside packages usually produces the error
+    ##    "No visible binding for global variable"
+    ## Thus, in the code below, we use the `.data$weight` syntax to show that the bound
+    ## variables are local to the dplyr environment.  See https://www.r-bloggers.com/no-visible-binding-for-global-variable/
     .Data <- .Data %>%
-        dplyr::mutate(pos   = sum(weight) - (cumsum(weight) - 0.5 * weight)) %>%
-        dplyr::mutate(pos_end = sum(weight)) %>%
-        dplyr::group_by(category) %>%
+        dplyr::mutate(pos   = sum(.data$weight) - (cumsum(.data$weight) - 0.5 * .data$weight)) %>%
+        dplyr::mutate(pos_end = sum(.data$weight)) %>%
+        dplyr::group_by(.data$category) %>%
         ## calculate position of supra goals before any unequal weighting (ie for FP)
-        dplyr::mutate(pos_supra  = ifelse(!is.na(category), mean(pos), NA)) %>%
+        dplyr::mutate(pos_supra  = ifelse(!is.na(.data$category), mean(.data$pos), NA)) %>%
         dplyr::ungroup() %>%
-        dplyr::filter(weight != 0) %>%
+        dplyr::filter(.data$weight != 0) %>%
         ## set up for displaying NAs
-        dplyr::mutate(plot_NA = ifelse(is.na(score), 100, NA))
+        dplyr::mutate(plot_NA = ifelse(is.na(.data$score), 100, NA))
 
     p_limits <- c(0, .Data$pos_end[1])
 
     ## create supra goal dataframe for position and labeling ----
     supra <- .Data %>%
-        dplyr::mutate(category = ifelse(is.na(category), label, category)) %>%
-        dplyr::mutate(category = paste0(category, "\n")) %>%
-        dplyr::select(category, pos_supra) %>%
+        dplyr::mutate(category = ifelse(is.na(.data$category), .data$label, .data$category)) %>%
+        dplyr::mutate(category = paste0(.data$category, "\n")) %>%
+        dplyr::select(.data$category, .data$pos_supra) %>%
         unique() %>%
         as.data.frame()
 
     ## calculate arc: stackoverflow.com/questions/38207390/making-curved-text-on-coord-polar ----
     supra_df <- supra %>%
         dplyr::mutate(myAng = seq(-70, 250, length.out = dim(supra)[1])) %>%
-        dplyr::filter(!is.na(pos_supra))
+        dplyr::filter(!is.na(.data$pos_supra))
 
     # Get list of goal labels
     goal_labels <- .Data %>%
-        dplyr::select(goal, label)
+        dplyr::select(.data$goal, .data$label)
 
     ## set up basic plot parameters ----
     ifelse(fixed_colors,
@@ -100,13 +105,13 @@ plot_flower <- function(.Data,
     plot_obj <- plot_obj +
         ggplot2::geom_bar(ggplot2::aes(y = 100),
                           stat = 'identity', color = light_line, fill = white_fill, size = .2) +
-        ggplot2::geom_errorbar(ggplot2::aes(x = pos, ymin = 100, ymax = 100, width = weight),
+        ggplot2::geom_errorbar(ggplot2::aes(x = .data$pos, ymin = 100, ymax = 100, width = .data$weight),
                                size = 0.5, color = light_line, show.legend = NA)
 
     ## lays any NA bars on top of background, with darker grey:
     if(any(!is.na(.Data$plot_NA))) {
         plot_obj <- plot_obj +
-            ggplot2::geom_bar(ggplot2::aes(x = pos, y = plot_NA),
+            ggplot2::geom_bar(ggplot2::aes(x = .data$pos, y = .data$plot_NA),
                               stat = 'identity', color = light_line, fill = light_fill, size = .2)
     }
 
@@ -115,10 +120,10 @@ plot_flower <- function(.Data,
         ## plot the actual scores on top of background/borders:
         ggplot2::geom_bar(stat = 'identity', color = dark_line, size = .2) +
         ## emphasize edge of petal
-        ggplot2::geom_errorbar(ggplot2::aes(x = pos, ymin = score, ymax = score),
+        ggplot2::geom_errorbar(ggplot2::aes(x = .data$pos, ymin = .data$score, ymax = .data$score),
                                size = 0.5, color = dark_line, show.legend = NA) +
         ## plot zero as a baseline:
-        ggplot2::geom_errorbar(ggplot2::aes(x = pos, ymin = 0, ymax = 0),
+        ggplot2::geom_errorbar(ggplot2::aes(x = .data$pos, ymin = 0, ymax = 0),
                                size = 0.5, color = dark_line, show.legend = NA) +
         ## turn linear bar chart into polar coordinates start at 90 degrees (pi*.5)
         ggplot2::coord_polar(start = pi * 0.5) +
@@ -160,7 +165,7 @@ plot_flower <- function(.Data,
 
     ## add goal names
     plot_obj <- plot_obj +
-        ggplot2::geom_text(ggplot2::aes(label = label, x = pos, y = 120),
+        ggplot2::geom_text(ggplot2::aes(label = .data$label, x = .data$pos, y = 120),
                            hjust = .5, vjust = .5,
                            size = 3,
                            color = dark_line)
@@ -173,10 +178,10 @@ plot_flower <- function(.Data,
         plot_obj <- plot_obj +
             ## add supragoal arcs
             ggplot2::geom_errorbar(data = supra_df, inherit.aes = FALSE,
-                                   ggplot2::aes(x = pos_supra, ymin = supra_rad, ymax = supra_rad),
+                                   ggplot2::aes(x = .data$pos_supra, ymin = supra_rad, ymax = supra_rad),
                                    size = 0.25, show.legend = NA) +
             ggplot2::geom_text(data = supra_df, inherit.aes = FALSE,
-                               ggplot2::aes(label = category, x = pos_supra, y = supra_rad, angle = myAng),
+                               ggplot2::aes(label = .data$category, x = .data$pos_supra, y = supra_rad, angle = .data$myAng),
                                hjust = .5, vjust = .5,
                                size = 3,
                                color = dark_line)

@@ -44,7 +44,8 @@ Depends:
     R (>= 3.2.0)
 Imports:
     dplyr (>= 0.8.3),
-    ggplot2
+    ggplot2,
+    rlang
 Suggests:
     testthat (>= 2.1.0)
 RoxygenNote: 6.1.1
