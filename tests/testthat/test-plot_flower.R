@@ -2,9 +2,6 @@ test_that("multiplication works", {
   expect_equal(2 * 2, 4)
 })
 
-# [1] "goal"            "dimension"       "region_id"       "score"           "year"            "order_color"     "order_hierarchy"
-# [8] "weight"          "name_supra"      "name_flower"     "pos"             "pos_end"         "pos_supra"       "plot_NA"
-
 test_that("flower plot displays", {
     library(flowers)
     library(dplyr)
