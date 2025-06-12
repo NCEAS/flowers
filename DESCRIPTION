@@ -1,6 +1,6 @@
 Package: flowers
 Title: Flower Plots
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     c(
     person(given = "Jim",
@@ -47,6 +47,8 @@ Authors@R:
 Description: Flowers provides functions to generate flower plot graphics.
 License: GPL-3
 Encoding: UTF-8
+URL: https://github.com/NCEAS/flowers
+BugReports: https://github.com/NCEAS/flowers/issues
 LazyData: true
 Depends:
     R (>= 3.2.0)
